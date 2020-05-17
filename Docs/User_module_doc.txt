@@ -1,0 +1,7 @@
+The user module is, developed for user authentications such as SignUp and SignIn
+
+--Modues Used
+1. State Management: vuex
+2. Ui: Vuetify (optional if you want to create a custom signIn and signUp UI)
+3. Form Validation: vuelidate (optional)
+3. Router: vue-router
