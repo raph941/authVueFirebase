@@ -23,17 +23,7 @@ export default {
                         //you can add more data here if you need
                         //to add more fields to registration
                     }
-                    firebase.database().ref('profile/' + user.user.uid).set(profilePayload)
-                    return user.uid
-                }
-            )
-            .then(
-                userId => {
-                    commit('setLoading', false)
-                    const newUser = {
-                        id: userId,
-                    }
-                    commit('setUser', newUser)
+                    return firebase.database().ref('profile/' + user.user.uid).set(profilePayload)
                 }
             )
             .catch(
@@ -46,48 +36,58 @@ export default {
         signUserIn ({commit}, payload) {
             commit('setLoading', true)
             commit('clearError')
+            var userId = ''
+            var userEmail = ''
             firebase.auth().signInWithEmailAndPassword(
                 payload.email, payload.password
-            ).then(
-                user => {
-                    commit('setLoading', false)
-                    const newUser = {
-                        id: user.uid,
+            ).then(snapshot => {
+                userId = snapshot.user.uid
+                userEmail = snapshot.user.email
+                return firebase.database().ref('profile/' + userId).once('value')
+            }).then (snapshot => {
+                const profileData = snapshot.val()
+                    const userData = {
+                        id: userId,
+                        email: userEmail,
+                        phoneNumber: profileData.phoneNumber,
                     }
-                    commit('setUser', newUser)
-                }
-            ).catch(
+                commit('setUser', userData)
+                commit('setLoading', false)
+            })
+            .catch(
                 error => {
                     commit('setError', error)
+                    commit('setLoading', false)
                 }
             )
         },
         autoSignIn ({commit}, payload) {
-            commit('setUser', {id: payload.uid})
+            // Note here, only user data is obtained because calling a firebase instance to to fetch user profile 
+            // would prolong page reload time
+            // however user profile would be fetched immediatly this is complete. check 'main.js' to see
+            const userData = {
+                id: payload.uid,
+                email: payload.email
+            }
+            commit('setUser', userData)
         },
-        fetchUserData ({commit}) {
+        fetchUserWithProfile ({commit, getters}) {
             commit('setLoading', true)
-            // firebase.database().ref('/users/' + getters.user.id + '/registrations/').once('value')
-            //     .then(data => {
-            //         const dataPairs = data.val()
-            //         let registeredMeetups = []
-            //         let swappedPairs = {}
-            //         for (let key in dataPairs){
-            //             registeredMeetups.push(dataPairs[key])
-            //             swappedPairs[dataPairs[key]] = key
-            //         }
-            //         const updatedUser = {
-            //             id: getters.user.id,
-            //             registeredMeetups: registeredMeetups,
-            //             fbkeys: swappedPairs
-            //         }
-            //         commit('setLoading', false)
-            //         commit('setUser', updatedUser)
-            //     })
-            //     .catch(error => {
-            //         console.log(error)
-            //         commit('setLoading', false)
-            //     })
+            firebase.database().ref('profile/' + getters.user.id).once('value')
+                .then(snapshot => {
+                    const data = snapshot.val()
+                    const userData = {
+                        id: getters.user.id,
+                        email: getters.user.email,
+                        phoneNumber: data.phoneNumber,
+                    }
+                    commit('setUser', userData)
+                    commit('setLoading', false)
+                })
+                .catch(error => {
+                    console.log(error)
+                    commit('setLoading', false)
+                })
             
         },
         logout ({commit}) {
