@@ -1,7 +1,7 @@
 export default {
   computed: {
     emailErrors () {
-        //this helps to return error message when email fields are wrong
+        //this helps to return error message when email fields are wrong (Used for both Signup and Signin)
         const errors = []
         if (!this.$v.email.$dirty) return errors
         !this.$v.email.email && errors.push('Must be a valid e-mail')
@@ -9,7 +9,7 @@ export default {
         return errors
     },
     passwordErrors () {
-        //this helps to return error message when password fields are wrong
+        //this helps to return error message when password fields are wrong (used for SignUp)
         const errors = []
         if (!this.$v.password.$dirty) return errors
         !this.$v.password.required && errors.push('password is required')
@@ -17,7 +17,7 @@ export default {
         return errors
     },
     confirmPasswordErrors () {
-        //this helps to return error message when passwords fields do not match
+        //this helps to return error message when passwords fields do not match (Used for SignUp)
         const errors = []
         if (!this.$v.confirmPassword.$dirty) return errors
         !this.$v.confirmPassword.required && errors.push('password is required')

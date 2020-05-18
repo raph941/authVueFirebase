@@ -67,9 +67,14 @@
 <script>
 import { validationMixin } from 'vuelidate'
 import { required, email } from 'vuelidate/lib/validators'
+import signInValidation from '@/mixins/signInValidation'
+import Alert from '@/components/Alert/ErrorAlert'
 
 export default {
-  mixins: [validationMixin],
+  mixins: [validationMixin, signInValidation],
+  components: {
+    'app-alert' : Alert
+  },
   data() {
     return {
       email: "",
@@ -83,21 +88,6 @@ export default {
     password: { required },
   },
   computed: {
-    emailErrors () {
-        //this helps to return error message when email fields are wrong
-        const errors = []
-        if (!this.$v.email.$dirty) return errors
-        !this.$v.email.email && errors.push('Must be a valid e-mail')
-        !this.$v.email.required && errors.push('E-mail is required')
-        return errors
-    },
-    passwordErrors () {
-        //this helps to return error message when password fields are wrong
-        const errors = []
-        if (!this.$v.password.$dirty) return errors
-        !this.$v.password.required && errors.push('password is required')
-        return errors
-    },
     formIsInvalid () {
         //this checks the overall form invalidity. returns true if form is invalid
         return this.$v.$invalid

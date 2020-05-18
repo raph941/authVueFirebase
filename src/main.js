@@ -14,15 +14,16 @@ new Vue({
   render: h => h(App),
   created () {
     firebase.initializeApp({
-      apiKey: "AIzaSyBiWNjYMuS2Nt1Ex7q2HYzU8PU1AQIHPVM",
-      authDomain: "generic-720ff.firebaseapp.com",
-      databaseURL: "https://generic-720ff.firebaseio.com",
-      projectId: "generic-720ff",
-      storageBucket: "generic-720ff.appspot.com",
-      messagingSenderId: "959882020642",
-      appId: "1:959882020642:web:c71babea3f309c1bc9077b",
-      measurementId: "G-D5QBQD7BK3"
+      apiKey: process.env.VUE_APP_FIREBASE_APIKEY,
+      authDomain: process.env.VUE_APP_FIREBASE_AUTHDOMAIN,
+      databaseURL: process.env.VUE_APP_FIREBASE_DATABASE_URL,
+      projectId: process.env.VUE_APP_FIREBASE_PROJECTID,
+      storageBucket: process.env.VUE_APP_FIREBASE_STORAGEBUCKET,
+      messagingSenderId: process.env.VUE_APP_FIREBASE_MESSAGINGSENDERID,
+      appId: process.env.VUE_APP_FIREBASE_APPID,
+      measurementId: process.env.VUE_APP_FIREBASE_MEASUREMENTID
     })
+
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         this.$store.dispatch('autoSignIn', user)
