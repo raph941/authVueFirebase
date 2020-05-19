@@ -17,6 +17,17 @@
                 <v-layout row>
                   <v-flex>
                     <v-text-field
+                      name="name"
+                      label="Full Name"
+                      id="name"
+                      v-model="name"
+                      required
+                    ></v-text-field>
+                  </v-flex>
+                </v-layout>
+                <v-layout row>
+                  <v-flex>
+                    <v-text-field
                       name="email"
                       label="Email"
                       id="email"
@@ -75,9 +86,6 @@
                     </v-btn>
                     <v-spacer></v-spacer>
                     <v-card-text>{{ message }}  </v-card-text>
-                    <v-btn text router to="/signin" class="blue">
-                        Signin
-                    </v-btn>
                   </v-flex>
                 </v-layout>
               </v-form>
@@ -102,6 +110,7 @@ export default {
   },
   data() {
     return {
+      name: "",
       email: "",
       phone: "",
       password: "",
@@ -140,6 +149,7 @@ export default {
     onSignup() {
         this.$store.dispatch('signUserUp', {
           // more input parameters can be passed here as payload
+          name: this.name, 
           email: this.email, 
           password: this.password, 
           phoneNumber: this.phone})

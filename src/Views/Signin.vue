@@ -52,7 +52,6 @@
                 <v-layout row>
                   <v-flex>
                     <v-card-tex>{{ message }}</v-card-tex>
-                    <v-btn text @click="onLogout">Signout</v-btn>
                   </v-flex>
                 </v-layout>
               </v-form>
@@ -97,7 +96,7 @@ export default {
     },
     error () {
       return this.$store.getters.error
-    }
+    },
   },
   watch: {
       user (value) {
